@@ -1,0 +1,22 @@
+{
+  "name": "razorcollab",
+  "version": "1.0.0",
+  "description": "Real-Time Collab",
+  "main": "index.js",
+  "devDependencies": {
+    "webpack": "^5.92.1",
+    "webpack-cli": "^5.1.4"
+  },
+  "scripts": {
+    "test": "start"
+  },
+  "repository": {
+    "type": "git",
+    "url": "."
+  },
+  "keywords": [
+    "collab"
+  ],
+  "author": "RazorFlames",
+  "license": "MIT"
+}
