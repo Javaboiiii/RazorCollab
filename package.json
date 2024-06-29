@@ -5,10 +5,13 @@
   "main": "index.js",
   "devDependencies": {
     "webpack": "^5.92.1",
-    "webpack-cli": "^5.1.4"
+    "webpack-cli": "^5.1.4",
+    "webpack-dev-server": "5.0.4"
   },
   "scripts": {
-    "test": "start"
+    "test": "start",
+    "build": "webpack",
+    "start": "webpack serve --open"
   },
   "repository": {
     "type": "git",
