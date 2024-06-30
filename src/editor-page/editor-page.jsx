@@ -163,15 +163,18 @@ function EditorPage() {
                 <button style={styles.buttonGroup}>New Note</button>
 
             </div>
+            <script src=""></script>
             <div style={styles.editor}>
                 <Editor
                     socketRef={socketRef}
                     roomId={roomId}
                     onCodeChange={(code) => {
                         codeRef.current = code;
+                        document.getElementById('preview').innerHTML = code2markdown.convert(code);
                     }}
                 />
             </div>
+            <div id="preview" class="c2m"></div>
         </div>
     );
 
