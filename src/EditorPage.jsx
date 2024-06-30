@@ -1,7 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import toast from 'react-hot-toast';
 import ACTIONS from './Actions';
-import Client from './components/Client';
 import Editor from './components/Editor';
 import { initSocket } from './socket';
 import {
@@ -108,10 +107,9 @@ const EditorPage = () => {
                     <h3>Connected</h3>
                     <div className="clientsList">
                         {clients.map((client) => (
-                            <Client
-                                key={client.socketId}
-                                username={client.username}
-                            />
+                            <div key={client.socketId}>
+                                {client.username}
+                            </div>
                         ))}
                     </div>
                 </div>
