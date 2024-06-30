@@ -7,6 +7,18 @@ let css_element = document.createElement('style');
 css_element.id = 'code2markdown-css';
 window.onload = () => {
     document.head.appendChild(css_element);
+
+    let css = `
+    .c2m {
+        background-color: #27272A;
+        color: #EBECED;
+        margin: 0;
+        padding: 10px 15px;
+        font-family: Inter,-apple-system,BlinkMacSystemFont,Segoe UI,Helvetica Neue,Helvetica,Roboto,Arial,system-ui,sans-serif,"Apple Color Emoji","Segoe UI Emoji",Segoe UI Symbol;
+    }
+    `;
+
+    css_element.innerHTML += css;
 }
 
 export let lexer = new Tokenizr();
