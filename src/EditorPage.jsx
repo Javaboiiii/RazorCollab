@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import toast from 'react-hot-toast';
 import ACTIONS from './Actions';
-import Editor from './components/Editor';
+import Editor from './components/Editor/Editor';
 import { initSocket } from './socket';
 import {
     useLocation,
