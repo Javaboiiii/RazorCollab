@@ -8,7 +8,7 @@ import {
   useParams,
 } from 'react-router-dom';
 import { Toaster } from 'react-hot-toast'
-import EditorPage from './EditorPage';
+import EditorPage from './editor-page/editor-page';
 import MainPage from './main page/main_page';
 import NewNote from './new-note/new-note';
 import CollaborativeNotes from './collaborative_notes/collaborative_notes';
@@ -19,7 +19,7 @@ function App() {
   const router = createBrowserRouter([
     {
       path: "/",
-      element: <MainPage ContentComponent={MyNote}/>,
+      element: <MainPage ContentComponent={NewNote}/>,
     },
     {
       path: "/new-note",

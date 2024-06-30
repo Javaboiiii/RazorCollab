@@ -1,11 +1,95 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import Avatar from 'react-avatar';
+import toast from 'react-hot-toast';
+import ACTIONS from '../Actions';
+import Editor from '../components/Editor/Editor';
+import { initSocket } from '../socket';
+import {
+    useLocation,
+    useNavigate,
+    Navigate,
+    useParams,
+} from 'react-router-dom';
 
 function EditorPage() {
-    const [clients, setClients] = useState([{ id: 1, name: 'Atharva Kavade' }
-        , { id: 2, name: 'Devraj Lokhande' }
-        , { id: 3, name: 'Abhinandan Bhuse' },
-    ]);
+    const socketRef = useRef(null);
+    const codeRef = useRef(null);
+    const location = useLocation();
+    const { roomId } = useParams();
+    const reactNavigator = useNavigate();
+    const [clients, setClients] = useState([]);
+
+    useEffect(() => {
+        const init = async () => {
+            socketRef.current = await initSocket();
+            socketRef.current.on('connect_error', (err) => handleErrors(err));
+            socketRef.current.on('connect_failed', (err) => handleErrors(err));
+
+            function handleErrors(e) {
+                console.log('socket error', e);
+                toast.error('Socket connection failed, try again later.');
+                reactNavigator('/');
+            }
+
+            // In future we can user proper auth method
+            const current_username = location.state?.username || "Guest" + Math.random().toString(36).substring(2, 12);
+
+            socketRef.current.emit(ACTIONS.JOIN, {
+                roomId,
+                username: current_username,
+            });
+
+            // Listening for joined event
+            socketRef.current.on(
+                ACTIONS.JOINED,
+                ({ clients, username, socketId }) => {
+                    if (username !== current_username) {
+                        toast.success(`${username} joined the room.`);
+                        console.log(`${username} joined`);
+                    }
+                    setClients(clients);
+                    socketRef.current.emit(ACTIONS.SYNC_CODE, {
+                        code: codeRef.current,
+                        socketId,
+                    });
+                }
+            );
+
+            // Listening for disconnected
+            socketRef.current.on(
+                ACTIONS.DISCONNECTED,
+                ({ socketId, username }) => {
+                    toast.success(`${username} left the room.`);
+                    setClients((prev) => {
+                        return prev.filter(
+                            (client) => client.socketId !== socketId
+                        );
+                    });
+                }
+            );
+        };
+        init();
+        return () => {
+            socketRef.current.disconnect();
+            socketRef.current.off(ACTIONS.JOINED);
+            socketRef.current.off(ACTIONS.DISCONNECTED);
+        };
+    }, []);
+
+    async function copyRoomId() {
+        try {
+            await navigator.clipboard.writeText(roomId);
+            toast.success('Room ID has been copied to your clipboard');
+        } catch (err) {
+            toast.error('Could not copy the Room ID');
+            console.error(err);
+        }
+    }
+
+    function leaveRoom() {
+        reactNavigator('/');
+    }
+
     const styles = {
         mainWrap: {
             display: 'flex',
@@ -65,21 +149,28 @@ function EditorPage() {
                     <div style={styles.clientlist}>
                         {clients.map((client) => {
 
-                            return <div key={client.id} style={styles.client}>
-                                <Avatar name={client.name} size="30" round={true} />
-                                <span>{client.name}</span>
+                            return <div key={client.socketId} style={styles.client}>
+                                <Avatar name={client.username} size="30" round={true} />
+                                <span>{client.username}</span>
                             </div>
                         })}
 
                     </div>
 
                 </div>
-                <button style={styles.buttonGroup}>Home</button>
+                <button style={styles.buttonGroup} onClick={copyRoomId}>Copy Room ID</button>
+                <button style={styles.buttonGroup} onClick={leaveRoom}>Leave</button>
                 <button style={styles.buttonGroup}>New Note</button>
 
             </div>
             <div style={styles.editor}>
-                editor goes here...
+                <Editor
+                    socketRef={socketRef}
+                    roomId={roomId}
+                    onCodeChange={(code) => {
+                        codeRef.current = code;
+                    }}
+                />
             </div>
         </div>
     );
