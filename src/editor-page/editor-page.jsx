@@ -4,6 +4,7 @@ import toast from 'react-hot-toast';
 import ACTIONS from '../Actions';
 import Editor from '../components/Editor/Editor';
 import { initSocket } from '../socket';
+import './style.css'
 import {
     useLocation,
     useNavigate,
@@ -134,13 +135,12 @@ function EditorPage() {
             },
             editor: {
                 flex: 1,
-                padding: '20px',
             },
         }
     };
     return (
         <div style={styles.mainWrap}>
-            <div style={styles.aside}>
+            <div className='space-y-5' style={styles.aside}>
                 <div style={styles.asideinner}>
                     <div>
                         <h1 style={styles.logo}>RazorCollab</h1>
@@ -164,8 +164,9 @@ function EditorPage() {
 
             </div>
             <script src=""></script>
-            <div style={styles.editor}>
+            <div className='w-[45vw]' style={styles.editor}>
                 <Editor
+                    className='h-auto'
                     socketRef={socketRef}
                     roomId={roomId}
                     onCodeChange={(code) => {
@@ -174,7 +175,7 @@ function EditorPage() {
                     }}
                 />
             </div>
-            <div id="preview" class="c2m"></div>
+            <div id="preview" className="c2m w-[45vw]"></div>
         </div>
     );
 
