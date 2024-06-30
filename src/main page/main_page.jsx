@@ -7,12 +7,13 @@ import CollaborativeNotes from '../collaborative_notes/collaborative_notes';
 import MyNote from '../my-notes/my-notes';
 import MyTrash from '../my-trash/my-trash';
 
-function App() {
+function MainPage({ ContentComponent }) {
     const styles = {
         container: {
             display: 'flex',
             height: '100vh',
             fontFamily: 'Arial, sans-serif',
+            margin: '0',
         },
         sidebar: {
             width: '250px',
@@ -106,7 +107,6 @@ function App() {
     };
 
     return (
-        <Router>
             <div style={styles.container}>
                 <div style={styles.sidebar}>
                     <div style={styles.sidebarHeader}>
@@ -137,21 +137,11 @@ function App() {
                     </div>
                 </div>
                 <div style={styles.content}>
-                    <Routes>
-                        <Route path="/new-note" element={<NewNote />} />
-                        <Route path="/my-notes" element={<MyNote />} />
-                        <Route path="/my-trash" element={<MyTrash />} />
-                        <Route path="/collaborative-notes" element={<CollaborativeNotes />} />
-                        <Route path="/" element={
-                            <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%' }}>
-                                <h1>Welcome to My Workspace</h1>
-                            </div>
-                        } />
-                    </Routes>
+                    <ContentComponent />
                 </div>
             </div>
-        </Router>
+        
     );
 }
 
-export default App;
+export default MainPage;
